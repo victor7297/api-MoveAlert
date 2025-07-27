@@ -15,11 +15,31 @@ class NotificacionFirebaseController extends Controller{
 
     public function __construct(){
 
-        $this->client = new Client();
+        /*$this->client = new Client();
         $this->client->setAuthConfig(storage_path('app/Firebase/CredencialesFirebase.json'));
         $this->client->addScope('https://www.googleapis.com/auth/firebase.messaging');
 
          // URL como atributo de clase
+        $this->url = "https://fcm.googleapis.com/v1/projects/movealert-6eb43/messages:send";*/
+
+         $this->client = new Client();
+
+        // Decodifica el JSON desde base64 y lo guarda temporalmente
+        $credentialsBase64 = env('FIREBASE_CREDENTIALS_BASE64');
+
+        if (!$credentialsBase64) {
+            throw new \Exception('La variable FIREBASE_CREDENTIALS_BASE64 no está definida.');
+        }
+
+        $jsonString = base64_decode($credentialsBase64);
+
+        // Guarda en un archivo temporal (opcional)
+        $tempPath = storage_path('app/firebase_temp_credentials.json');
+        file_put_contents($tempPath, $jsonString);
+
+        $this->client->setAuthConfig($tempPath);
+        $this->client->addScope('https://www.googleapis.com/auth/firebase.messaging');
+
         $this->url = "https://fcm.googleapis.com/v1/projects/movealert-6eb43/messages:send";
     }
 
