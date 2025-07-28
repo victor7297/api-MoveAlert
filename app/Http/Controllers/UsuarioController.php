@@ -59,14 +59,28 @@ class UsuarioController extends Controller{
                 ];
 
                 $tokenTelefono = new TokenTelefonoController();
-                $tokenTelefono->registrarToken($data);
+                $respuesta = $tokenTelefono->registrarToken($data);
 
-                return response()->json([
-                    'status' => 'success', 
-                    'data' => $usuario->makeHidden(['password']) //Este código oculta el atributo password para que no se incluya  al devolverlo en una API JSON.
-                ],200);
+                if($respuesta["status"] === "success"){
 
-            } else {
+                    return response()->json([
+                        'status' => 'success', 
+                        'data' => $usuario->makeHidden(['password']) //Este código oculta el atributo password para que no se incluya  al devolverlo en una API JSON.
+                    ],200);
+
+                }
+                else{
+
+                    return response()->json([
+                        'status' => 'error', 
+                        "mensaje"=> "Autenticación fallida. Intentalo mas tarde.",
+                        "mensajeException" => $respuesta["mensajeException"]
+                    ],200);
+
+                }
+
+            } 
+            else {
             
                 return response()->json([
                     'status' => 'error', 

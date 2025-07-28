@@ -22,7 +22,7 @@ class NotificacionFirebaseController extends Controller{
          // URL como atributo de clase
         $this->url = "https://fcm.googleapis.com/v1/projects/movealert-6eb43/messages:send";*/
 
-         $this->client = new Client();
+        $this->client = new Client();
 
         // Decodifica el JSON desde base64 y lo guarda temporalmente
         $credentialsBase64 = env('FIREBASE_CREDENTIALS_BASE64');
